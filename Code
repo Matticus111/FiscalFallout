@@ -1,0 +1,199 @@
+---
+title: "Fiscal Fallout"
+author: "by Matthew Ellis - March 1, 2020"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: fill
+    source_code: embed
+---
+
+<style type="text/css">
+
+body{ /*Normal */
+   font-size: 14px;
+   font-family: palatino Linotype;
+}
+
+.important {  /* important  */
+   font-size: 24px;
+   font-family: Palatino Linotype;
+}
+
+.navbar, [data-toggle=tab], navbar-brand {
+  background-color: Black!important;
+  border-color: White;
+  font-family: Palatino Linotype;
+}
+
+</style>
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(DT)
+library(knitr)
+library(plotly)
+library(dygraphs)
+library(xts)
+```
+
+```{r global, include=FALSE}
+setwd("/cloud/project")
+DEBT_GDP <- read.csv("/cloud/project/DATA/GFDGDPA188S.csv")
+```
+
+# Amount of Federal Debt {data-orientation=columns}
+
+## overview {.sidebar}
+
+<p class="important"> The Federal Debt </p>
+
+The Federal debt is the amount the governent owes, accumulated through yearly budget deficits. Sometimes deficits are needed. In times of national emergency the government might spend money on disaster recovery which might increase the deficit. During economic crises the government can spend money or reduce taxes to promote spending and get the economy back on track. 
+
+But these two graphs, showing the Federal debt as a percentage of Gross Domestic Product since 1939 and again since 1966, show that our national debt has grown far above normal levels. 
+
+The data for these graphs, made using dygraphs, comes from the Federal Reserve Bank of St. Louis.^1^
+
+## Fixed {data-orientation=rows}
+
+### {data-width=450}
+
+```{r}
+toDate <- function(x) as.Date(x, origin = "1966-01-01")
+z <- read.zoo("/cloud/project/DATA/GFDGDPA188S.csv", header = TRUE, sep = ",", FUN = toDate)
+x <- as.xts(z)
+dygraph(x, main ="Gross Federal Debt as a Percent of GDP since 1939", ylab ="Percentage", xlab = "Year") %>%
+dySeries("V1", label="Percentage", color="red")
+```
+
+-------------------------
+### {data-width=450}
+
+```{r}
+toDate <- function(x) as.Date(x, origin = "1966-01-01")
+y <- read.zoo("/cloud/project/DATA/GDP2.csv", header = TRUE, sep = ",", FUN = toDate)
+w <- as.xts(y)
+dygraph(w, main ="Gross Federal Debt as a Percent of GDP since 1966", ylab ="Percentage", xlab = "Year") %>%
+dySeries("V1", label="Percentage", color="red")
+```
+
+# Problems with Federal Debt {data-orientation=rows}
+
+## Overview {.sidebar}
+
+<p class="important"> Why is Federal Debt a Problem? </p>
+
+The amount of Federal Debt that the government owes, measured against the size of the economy, is the largest it has been since World War II ended.^2^ 
+
+This wouldn't be a problem by itself, if it weren't for three factors 
+
+1. The debt owed to foreign entities has risen
+
+2. The interest payments will continue to rise
+
+3. The debt is being driven by an increase in mandatory spending
+
+
+## charts
+
+### About This Line Graph
+
+The line graph to the right shows the amount of debt the Federal Government owes to foreign entities from 1970 to 2019. These include foriegn investors and foreign governments. The rise in this type of debt is bad for the United States for many reasons. The main reason is that the interest payments that are payed to these foreign entities do not enter back into the American economy, like such payments would if the debt was owed to those within the United States. As foreign held debt grows, money paid for through taxes flow out of the united states, hurting the economy. 
+
+This line graph was made using dygraphs. The data came from the Federal Reserve Bank of St. Louis.^3^
+
+### {} 
+
+```{r}
+toDate <- function(x) as.Date(x, origin = "1966-01-01")
+one1 <- read.zoo("/cloud/project/DATA/FDHBFIN.csv", header = TRUE, sep = ",", FUN = toDate)
+two2 <- as.xts(one1)
+dygraph(two2, main ="Amount of Federal Debt owed to Foreign Entities", ylab ="Billions of Dollars", xlab = "Year") %>%
+dySeries("V1", label="Billions of Dollars", color="red")
+```
+
+## charts 2
+
+### About This Line Graph
+
+The line graph to the right shows the amount of interest as part of the Federal Government outlays growing since 1940. Interest payments must be made. they are part of the federal budget, and thus are either payed for by revenues, or financed through more debt. If the interest payments rise, either by a rise in overall debt, or a rise in interest rates, then more taxes would have to be levied in order to pay for those payments.  
+
+This line graph was made using dygraph. The data came from the Federal Reserve Bank of St. Louis.^4^
+
+### {}
+
+```{r}
+toDate <- function(x) as.Date(x, origin = "1966-01-01")
+xy <- read.zoo("/cloud/project/DATA/FYOINT.csv", header = TRUE, sep = ",", FUN = toDate)
+xz <- as.xts(xy)
+dygraph(xz, main ="Amount of Interest in Federal Outlays", ylab ="Millions of Dollars", xlab = "Year") %>%
+dySeries("V1", label="Millions of Dollars", color="red")
+```
+
+# The Third Problem
+
+## {.sidebar}
+
+<p class="important"> The Federal debt is unsustainable </p>
+
+The third problem with the Federal Government's level of debt and the recurring deficits are that they are mainly driven by mandatory spending. Social Security, Medicare, and Medicaid make up close to two thirds of all Federal Government spending.^5^ Because of this, the level of annual deficits will continue to rise no matter what Congress does in terms of discretionary spending. The deficits will continue year after year, the level of foreign owned debt will continue to rise, and the amount of money flowing outside the United States will drastically lower the standard of living. 
+
+Rising interest payments, coupled with the threat of rising interest rates, will necessitate either even more deficit spending, or a drastic increase in taxes.
+
+Right now, there is a disconnect between what services people expect, Social Security, Medicare and Medicaid, and the amount of taxes needed to sustain these programs. Federal debt should be used as an investment, purchasing capital that will return an investment, not for sustaining programs.  
+
+## {}
+
+### Trillion Dollars in Debt
+
+```{r}
+FedDebtTotal <- "$21.6" 
+valueBox(FedDebtTotal,
+         icon = 'cash-outline',
+         color = "orange")
+```
+
+## {}
+
+### Per Person in 2018
+
+```{r}
+FedDebtPerPerson <- "$65,600"
+valueBox(FedDebtPerPerson,
+         icon = 'cash-outline',
+         color = "orange")
+```
+
+## {}
+
+### {}
+
+<p class="important"> Drastic Effects on the Economy </p>
+
+The Federal debt has grown to $21.6 trillion. In 2018 that amount was $65,600 per person. Regularly, interest payments would be made to US bond holders, and then entered back in to the economy when it is spent. But, with more and more debt going to foreign entities, that money is being siphoned out of the United States.
+
+The amount of debt per person is larger than the median household income, which is around $56,000.^6^
+
+If the economy falters, unemployment rises, safety net costs will increase, and interest payments will need to still be met and more and more debt will be required to pull the United States out of a spiral, which will indebt us more and more. This would truly be a fiscal fallout which we would not recover from.
+
+
+# Citations
+
+## Here
+
+### {}
+
+<p class="important"> Cited Sources </p>
+
+1: https://fred.stlouisfed.org/series/GFDEGDQ188S and https://fred.stlouisfed.org/series/GFDGDPA188S
+
+2: https://www.brookings.edu/policy2020/votervital/how-worried-should-you-be-about-the-federal-deficit-and-debt/
+
+3: https://fred.stlouisfed.org/series/FDHBFIN
+
+4: https://fred.stlouisfed.org/series/FYOINT
+
+5: https://www.gao.gov/americas_fiscal_future?t=federal_debt
+
+6: https://www.cnbc.com/2017/08/24/how-much-americans-earn-at-every-age.html
+
